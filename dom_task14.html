@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+       <form onsubmit="saveTOlocalstorage(event)">
+        <label>Name:</label>
+        <input type="text" name="username" id="username" required/>
+        <br>
+        <label>Email:</label>
+        <input type="text" name="emailid" id="emailid" required/>
+        <br>
+        <label>Phone Number:</label>
+        <input type="text" name="phonenumber" id="phonenumber" required/>
+        <br>
+        <button>SUBMIT</button>
+
+       </form>
+       <ul id='listofUsers'></ul>
+
+        <script>
+            function saveTOlocalstorage(event){
+                event.preventDefault();
+                const name=event.target.username.value;
+                const email=event.target.emailid.value;
+                const phonenumber=event.target.phonenumber.value;
+                const obj={
+                    name,
+                    email,
+                    phonenumber
+                }
+                localStorage.setItem(obj.email,JSON.stringify(obj));
+                showNewUserOnScreen(obj);
+            }
+            function showNewUserOnScreen(obj){
+                const parentNode = document.getElementById('listofUsers');
+                const childElem = document.createElement('li');
+                childElem.textContent = obj.name + ' - ' + obj.email + ' - ' + obj.phonenumber;
+                
+                const deleteBtn = document.createElement('input');
+                deleteBtn.type = 'button';
+                deleteBtn.value = 'Delete';
+                deleteBtn.onclick = () => {
+                    localStorage.removeItem(obj.email);
+                    parentNode.removeChild(childElem);
+                }
+
+                const editBtn = document.createElement('input');
+                editBtn.type = 'button';
+                editBtn.value = 'Edit';
+                editBtn.onclick = () => {
+                    document.getElementById("username").value=obj.name;
+                    document.getElementById("emailid").value=obj.email;
+                    document.getElementById("phonenumber").value=obj.phonenumber;
+                    localStorage.removeItem(obj.email);
+                    parentNode.removeChild(childElem);
+                }            
+
+                childElem.appendChild(deleteBtn);
+                childElem.appendChild(editBtn);
+                parentNode.appendChild(childElem);
+            }
+        </script>
+    </body>
+</html>
